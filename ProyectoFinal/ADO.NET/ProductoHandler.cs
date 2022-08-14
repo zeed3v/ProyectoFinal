@@ -5,18 +5,19 @@ namespace ProyectoFinal
 {
     public class ProductoHandler : DbHandler
     {
-        public Producto GetById(int id)
+        public static List<Producto> TraerProductos(int id)
         {
             List<Producto> productos = new List<Producto>();
+            
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand sqlCommand = new SqlCommand())
                 {
                     sqlCommand.Connection = sqlConnection;
                     sqlCommand.Connection.Open();
-                    sqlCommand.CommandText = "select * from Producto where IdUsuario = @id;";
+                    sqlCommand.CommandText = "SELECT * FROM Producto where IdUsuario = @idUsuario;";
 
-                    sqlCommand.Parameters.AddWithValue("@id", id);
+                    sqlCommand.Parameters.AddWithValue("@idUsuario", id);
 
                     SqlDataAdapter dataAdapter = new SqlDataAdapter();
                     dataAdapter.SelectCommand = sqlCommand;
@@ -35,43 +36,6 @@ namespace ProyectoFinal
 
                         productos.Add(producto);
                     }
-                }
-            }
-
-            return productos?.FirstOrDefault();
-        }
-
-        public List<Producto> TraerProducto()
-        {
-            List<Producto> productos = new List<Producto>();
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand(
-                    "SELECT * FROM Producto WHERE IdUsuario = @IdUsuario", sqlConnection))
-                {
-                    sqlConnection.Open();
-
-                    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
-                    {
-                        // Me aseguro que haya filas que leer
-                        if (dataReader.HasRows)
-                        {
-                            while (dataReader.Read())
-                            {
-                                Producto producto = new Producto();
-                                producto.Id = Convert.ToInt32(dataReader["Id"]);
-                                producto.Stock = Convert.ToInt32(dataReader["Stock"]);
-                                producto.IdUsuario = Convert.ToInt32(dataReader["IdUsuario"]);
-                                producto.Costo = Convert.ToInt32(dataReader["Costo"]);
-                                producto.PrecioVenta = Convert.ToInt32(dataReader["PrecioVenta"]);
-                                producto.Descripciones = dataReader["Descripciones"].ToString();
-
-                                productos.Add(producto);
-                            }
-                        }
-                    }
-
-                    sqlConnection.Close();
                 }
             }
 

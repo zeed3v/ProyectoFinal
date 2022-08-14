@@ -1,44 +1,43 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 
 namespace ProyectoFinal
 {
     public class ProductoVendidoHandler : DbHandler
     {
-        public ProductoVendido GetById(int id)
+        public List<ProductoVendido> TraerProductoVendido(int id)
         {
-            List<ProductoVendido> productos = new List<ProductoVendido>();
+            List<ProductoVendido> productosVendidos = new List<ProductoVendido>();
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand sqlCommand = new SqlCommand())
                 {
                     sqlCommand.Connection = sqlConnection;
                     sqlCommand.Connection.Open();
-                    sqlCommand.CommandText = "select * from ProductoVendido where IdUsuario = @IdUsuario";
+                    sqlCommand.CommandText = "select * from ProductoVendido where IdUsuario = @idUsuario";
 
-                    sqlCommand.Parameters.AddWithValue("@id", id);
+                    sqlCommand.Parameters.AddWithValue("@idUsuario", id);
 
                     SqlDataAdapter dataAdapter = new SqlDataAdapter();
                     dataAdapter.SelectCommand = sqlCommand;
                     DataTable table = new DataTable();
-                    dataAdapter.Fill(table); //Se ejecuta el Select
+                    dataAdapter.Fill(table);
                     sqlCommand.Connection.Close();
                     foreach (DataRow row in table.Rows)
                     {
                         ProductoVendido productoVendido = new ProductoVendido();
                         
                         productoVendido.Id = Convert.ToInt32(row["Id"]);
-                        productoVendido.Stock = row["Stock"]?.ToString();
-                        productoVendido.IdProducto = Convert.ToDouble(row["IdProducto"]);
-                        productoVendido.IdVenta = Convert.ToDouble(row["IdVenta"]);
+                        productoVendido.Stock = Convert.ToInt32(row["Stock"]);
+                        productoVendido.IdProducto = Convert.ToInt32(row["IdProducto"]);
+                        productoVendido.IdVenta = Convert.ToInt32(row["IdVenta"]);
 
-                        productoVendido.Add(productoVendido);
+                        productosVendidos.Add(productoVendido);
                     }
                 }
             }
 
-            return productos?.FirstOrDefault();
+            return productosVendidos;
         }
-
-        public class TraerProductoVendido();
     }
 }

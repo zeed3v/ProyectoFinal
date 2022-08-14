@@ -11,12 +11,12 @@
 
             UsuarioHandler usuarioHandler = new UsuarioHandler();
 
-            usuarioHandler.TraerUsuarios();
+            usuarioHandler.TraerUsuario();
 
 
             ProductoVendidoHandler productoVendidoHandler = new ProductoVendidoHandler();
 
-            ProductoVendidoHandler.TraerProductoVendido();
+            productoVendidoHandler.TraerProductoVendido();
             
 
             VentaHandler ventaHandler = new VentaHandler();
